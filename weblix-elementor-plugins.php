@@ -15,22 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WEBLIX_ELEMENTOR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WEBLIX_ELEMENTOR_URL', plugin_dir_url( __FILE__ ) );
 
-// Auto-updater: checks self-hosted GitLab for new releases (tags = versions)
+// Auto-updater: checks GitHub releases for new versions (public repo, no token needed)
 require_once WEBLIX_ELEMENTOR_PATH . 'lib/plugin-update-checker/plugin-update-checker.php';
-
-use YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitLabApi;
-use YahnisElsts\PluginUpdateChecker\v5p6\Vcs\PluginUpdateChecker as VcsPluginChecker;
-
-// Token defined in wp-config.php: define('WEBLIX_GITLAB_TOKEN', 'glpat-...');
-if ( defined( 'WEBLIX_GITLAB_TOKEN' ) ) {
-	$weblix_gitlab_api = new GitLabApi(
-		'https://git.hosting.gl/Adrian/weblix-elementor-plugins',
-		WEBLIX_GITLAB_TOKEN,
-		'git.hosting.gl'
-	);
-	$weblix_updater = new VcsPluginChecker( $weblix_gitlab_api, __FILE__, 'weblix-elementor-plugins' );
-	$weblix_updater->setBranch( 'main' );
-}
+YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+	'https://github.com/weblixpl/Weblix-Elementor-Plugins',
+	__FILE__,
+	'weblix-elementor-plugins'
+);
 
 final class Weblix_Elementor_Plugins {
 
