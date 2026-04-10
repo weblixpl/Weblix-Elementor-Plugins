@@ -61,14 +61,14 @@ class Wave_Ticker extends \Elementor\Widget_Base {
 		$this->add_control( 'scroll_speed', [
 			'label'   => 'Prędkość przewijania (px/s)',
 			'type'    => \Elementor\Controls_Manager::SLIDER,
-			'default' => [ 'size' => 80 ],
+			'default' => [ 'size' => 100 ],
 			'range'   => [ 'px' => [ 'min' => 10, 'max' => 300 ] ],
 		] );
 
 		$this->add_control( 'wave_amplitude', [
 			'label'   => 'Amplituda fali (px)',
 			'type'    => \Elementor\Controls_Manager::SLIDER,
-			'default' => [ 'size' => 12 ],
+			'default' => [ 'size' => 22 ],
 			'range'   => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
 		] );
 
@@ -170,10 +170,9 @@ class Wave_Ticker extends \Elementor\Widget_Base {
 		wp_enqueue_script( 'weblix-wave-ticker' );
 		?>
 		<div class="weblix-wave-ticker"
-			data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>">
-			<div class="weblix-wave-ticker__track">
-				<span class="weblix-wave-ticker__text" data-text="<?php echo esc_attr( $settings['text'] ); ?>"></span>
-			</div>
+			data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>"
+			data-text="<?php echo esc_attr( $settings['text'] ); ?>">
+			<span class="weblix-wave-ticker__sr"><?php echo esc_html( $settings['text'] ); ?></span>
 		</div>
 		<?php
 	}

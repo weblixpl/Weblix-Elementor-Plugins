@@ -6,20 +6,28 @@
 		el.dataset.weblixInit = '1';
 
 		const config        = JSON.parse( el.dataset.config || '{}' );
-		const scrollSpeed   = config.scrollSpeed   || 80;
-		const waveAmplitude = config.waveAmplitude || 12;
+		const scrollSpeed   = config.scrollSpeed   || 100;
+		const waveAmplitude = config.waveAmplitude || 22;
 		const waveFrequency = config.waveFrequency || 0.35;
 		const waveSpeed     = config.waveSpeed     || 2;
 		const gap           = config.gap           || 0;
 
-		const track    = el.querySelector( '.weblix-wave-ticker__track' );
-		const original = el.querySelector( '.weblix-wave-ticker__text' );
-
 		// \p{Emoji_Presentation} = znaki domyślnie renderowane jako kolorowe emoji
-		// \p{Extended_Pictographic} jest za szeroki (obejmuje też zwykłe symbole tekstowe)
 		const reEmoji     = /\p{Emoji_Presentation}/u;
 		// Variation selectors, ZWJ, zero-width chars — skip as standalone segments
 		const reInvisible = /^[\uFE00-\uFE0F\u200B-\u200F\u2028\u2029\uFEFF\u00AD]+$/;
+
+		// ── Build DOM (track + text span) from el.dataset.text ────────────────
+		// PHP puts text in data-text on the outer container; JS builds the DOM
+		const track    = document.createElement( 'div' );
+		track.className = 'weblix-wave-ticker__track';
+
+		const original = document.createElement( 'span' );
+		original.className = 'weblix-wave-ticker__text';
+		original.dataset.text = el.dataset.text || '';
+
+		track.appendChild( original );
+		el.appendChild( track );
 
 		function makeCharSpan( ch ) {
 			const s       = document.createElement( 'span' );
@@ -35,16 +43,12 @@
 			return s;
 		}
 
-
 		// Wrap each character in a <span>
 		// Text comes from data-text attribute to bypass WordPress emoji <img> conversion
 		function wrapChars( span ) {
 			const text = span.dataset.text || span.textContent;
 
-			// Remove all existing children safely
-			while ( span.firstChild ) {
-				span.removeChild( span.firstChild );
-			}
+			while ( span.firstChild ) span.removeChild( span.firstChild );
 
 			const segments = typeof Intl !== 'undefined' && Intl.Segmenter
 				? [ ...new Intl.Segmenter( undefined, { granularity: 'grapheme' } ).segment( text ) ].map( s => s.segment )
@@ -58,15 +62,11 @@
 		wrapChars( original );
 		original.style.marginRight = gap + 'px';
 
-		// Remove any extra copies rendered by PHP (keep only first)
-		track.querySelectorAll( '.weblix-wave-ticker__text:not(:first-child)' )
-			.forEach( ( n ) => n.remove() );
-
 		let scrollX      = 0;
 		let lastTime     = null;
 		let oneWidth     = 0;
 		let ready        = false;
-		let charXCache   = null; // pre-calculated X positions for spatial wave
+		let charXCache   = null;
 
 		function buildClones() {
 			const containerWidth = el.offsetWidth;
@@ -86,14 +86,12 @@
 				track.appendChild( clone );
 			}
 
-			// Pre-calculate each char's X position within the track (for spatial wave)
-			// One RAF delay so layout is settled before measuring
 			charXCache = null;
 			ready = true;
 		}
 
 		function buildCharXCache() {
-			const allChars = track.querySelectorAll( '.weblix-wave-ticker__char' );
+			const allChars  = track.querySelectorAll( '.weblix-wave-ticker__char' );
 			const trackLeft = track.getBoundingClientRect().left;
 			charXCache = Array.from( allChars ).map( ( char ) => ( {
 				el : char,
@@ -110,25 +108,20 @@
 				}
 			}
 
-			// Build position cache on first frame after clones are ready
-			if ( ! charXCache ) {
-				buildCharXCache();
-			}
+			if ( ! charXCache ) buildCharXCache();
 
 			if ( lastTime === null ) lastTime = now;
 			const dt = ( now - lastTime ) / 1000;
 			lastTime = now;
 
 			scrollX += scrollSpeed * dt;
-			if ( scrollX >= oneWidth ) {
-				scrollX -= oneWidth;
-			}
+			if ( scrollX >= oneWidth ) scrollX -= oneWidth;
 			track.style.transform = `translateX(-${ scrollX }px)`;
 
-			// Spatial wave: phase based on char's screen X position
-			// so neighbouring letters share the same phase → whole words flow together
+			// Spatial wave: phase based on char's screen X position.
+			// Neighbouring letters share nearly the same phase → whole words travel as one wave.
 			const time        = now / 1000;
-			const spatialFreq = waveFrequency * 0.008; // radians per pixel (tune via control)
+			const spatialFreq = waveFrequency * 0.008; // radians per pixel
 
 			charXCache.forEach( ( { el, x } ) => {
 				const screenX = x - scrollX;
@@ -140,9 +133,9 @@
 			requestAnimationFrame( tick );
 		}
 
-		// Rebuild clones on resize
 		window.addEventListener( 'resize', () => {
 			ready = false;
+			charXCache = null;
 		} );
 
 		requestAnimationFrame( tick );
