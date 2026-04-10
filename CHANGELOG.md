@@ -1,5 +1,10 @@
 # Changelog — Weblix Elementor Plugins
 
+## 1.2.0 — Wave Ticker: płynna fala po wyrazach
+
+### Wave Ticker widget
+- **Poprawa animacji fali** — faza fali bazuje teraz na pozycji X znaku na ekranie (spatial wave). Sąsiednie litery mają prawie identyczne przesunięcie Y, dzięki czemu całe wyrazy i frazy płyną jako jedna gładka fala zamiast każdej litery animować się niezależnie.
+
 ## 1.1.0 — Wave Ticker: pełna stabilizacja
 
 ### Wave Ticker widget
