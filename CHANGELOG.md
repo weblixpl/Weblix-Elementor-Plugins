@@ -1,5 +1,10 @@
 # Changelog — Weblix Elementor Plugins
 
+## 1.2.1 — Fix: aktualizator GitHub (rate limit)
+
+### Poprawki
+- **Fix: błąd 403 przy sprawdzaniu aktualizacji** — wbudowany token bez uprawnień (zero scopes) omija limit GitHub API na serwerach współdzielonych. Nie wymaga konfiguracji wp-config.php.
+
 ## 1.2.0 — Wave Ticker: płynna fala po wyrazach
 
 ### Wave Ticker widget

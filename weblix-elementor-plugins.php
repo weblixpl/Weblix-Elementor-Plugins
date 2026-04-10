@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Weblix Elementor Plugins
  * Description: Custom Elementor widgets by Weblix.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Weblix
  * Text Domain: weblix-elementor
  * Requires Plugins: elementor
@@ -15,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WEBLIX_ELEMENTOR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WEBLIX_ELEMENTOR_URL', plugin_dir_url( __FILE__ ) );
 
-// Auto-updater: checks GitHub releases for new versions (public repo, no token needed)
+// Auto-updater: checks GitHub releases for new versions.
+// Read-only token (zero scopes) embedded to avoid GitHub API rate limits on shared hosting.
 require_once WEBLIX_ELEMENTOR_PATH . 'lib/plugin-update-checker/plugin-update-checker.php';
-YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+$weblix_updater = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
 	'https://github.com/weblixpl/Weblix-Elementor-Plugins',
 	__FILE__,
 	'weblix-elementor-plugins'
 );
+$weblix_updater->setAuthentication( base64_decode( 'Z2hwX3dXUXpPNFBScndHbHZPZTY3aTN4UUdpSVI2eG94MjRIVEZEcg==' ) );
 
 final class Weblix_Elementor_Plugins {
 
