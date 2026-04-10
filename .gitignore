@@ -1,0 +1,19 @@
+# WordPress
+*.log
+*.cache
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Build / temp
+*.zip
+/node_modules/
