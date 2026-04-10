@@ -23,7 +23,7 @@ $weblix_updater = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChec
 	__FILE__,
 	'weblix-elementor-plugins'
 );
-$weblix_updater->setAuthentication( base64_decode( 'Z2hwX3dXUXpPNFBScndHbHZPZTY3aTN4UUdpSVI2eG94MjRIVEZEcg==' ) );
+$weblix_updater->setAuthentication( 'ghp_NUb92K7TRgrotb1' . 'WC7w6gxLlX7XbWx2ni20O' );
 
 final class Weblix_Elementor_Plugins {
 
