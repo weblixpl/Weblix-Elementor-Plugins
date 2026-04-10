@@ -62,10 +62,11 @@
 		track.querySelectorAll( '.weblix-wave-ticker__text:not(:first-child)' )
 			.forEach( ( n ) => n.remove() );
 
-		let scrollX  = 0;
-		let lastTime = null;
-		let oneWidth = 0;
-		let ready    = false;
+		let scrollX      = 0;
+		let lastTime     = null;
+		let oneWidth     = 0;
+		let ready        = false;
+		let charXCache   = null; // pre-calculated X positions for spatial wave
 
 		function buildClones() {
 			const containerWidth = el.offsetWidth;
@@ -73,21 +74,31 @@
 
 			if ( oneWidth === 0 ) return;
 
-			// How many copies needed to cover container width × 2 (buffer)
 			const needed = Math.ceil( ( containerWidth * 2 ) / oneWidth ) + 1;
 
-			// Remove old clones
 			track.querySelectorAll( '.weblix-wave-ticker__clone' )
 				.forEach( ( n ) => n.remove() );
 
 			for ( let i = 0; i < needed; i++ ) {
-				const clone       = original.cloneNode( true );
+				const clone = original.cloneNode( true );
 				clone.classList.add( 'weblix-wave-ticker__clone' );
 				clone.setAttribute( 'aria-hidden', 'true' );
 				track.appendChild( clone );
 			}
 
+			// Pre-calculate each char's X position within the track (for spatial wave)
+			// One RAF delay so layout is settled before measuring
+			charXCache = null;
 			ready = true;
+		}
+
+		function buildCharXCache() {
+			const allChars = track.querySelectorAll( '.weblix-wave-ticker__char' );
+			const trackLeft = track.getBoundingClientRect().left;
+			charXCache = Array.from( allChars ).map( ( char ) => ( {
+				el : char,
+				x  : char.getBoundingClientRect().left - trackLeft,
+			} ) );
 		}
 
 		function tick( now ) {
@@ -97,6 +108,11 @@
 					requestAnimationFrame( tick );
 					return;
 				}
+			}
+
+			// Build position cache on first frame after clones are ready
+			if ( ! charXCache ) {
+				buildCharXCache();
 			}
 
 			if ( lastTime === null ) lastTime = now;
@@ -109,16 +125,16 @@
 			}
 			track.style.transform = `translateX(-${ scrollX }px)`;
 
-			// Wave — index resets per copy so phase is consistent across clones
-			const time  = now / 1000;
-			const charsPerCopy = original.querySelectorAll( '.weblix-wave-ticker__char' ).length;
-			const allChars = track.querySelectorAll( '.weblix-wave-ticker__char' );
+			// Spatial wave: phase based on char's screen X position
+			// so neighbouring letters share the same phase → whole words flow together
+			const time        = now / 1000;
+			const spatialFreq = waveFrequency * 0.008; // radians per pixel (tune via control)
 
-			allChars.forEach( ( char, i ) => {
-				const localIndex = i % charsPerCopy;
-				const phase = localIndex * waveFrequency - time * waveSpeed;
-				const y     = Math.sin( phase ) * waveAmplitude;
-				char.style.transform = `translateY(${ y }px)`;
+			charXCache.forEach( ( { el, x } ) => {
+				const screenX = x - scrollX;
+				const phase   = screenX * spatialFreq - time * waveSpeed;
+				const y       = Math.sin( phase ) * waveAmplitude;
+				el.style.transform = `translateY(${ y }px)`;
 			} );
 
 			requestAnimationFrame( tick );
