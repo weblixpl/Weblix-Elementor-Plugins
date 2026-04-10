@@ -1,5 +1,10 @@
 # Changelog — Weblix Elementor Plugins
 
+## 1.2.2 — Test aktualizatora
+
+### Zmiany
+- Test mechanizmu auto-update przez WP Admin.
+
 ## 1.2.1 — Fix: aktualizator GitHub (rate limit)
 
 ### Poprawki

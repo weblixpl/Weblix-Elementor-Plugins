@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Weblix Elementor Plugins
  * Description: Custom Elementor widgets by Weblix.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Weblix
  * Text Domain: weblix-elementor
  * Requires Plugins: elementor
