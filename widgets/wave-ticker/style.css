@@ -1,0 +1,29 @@
+.weblix-wave-ticker {
+	overflow: hidden;
+	width: 100%;
+	white-space: nowrap;
+	position: relative;
+}
+
+.weblix-wave-ticker__track {
+	display: inline-flex;
+	align-items: center;
+	will-change: transform;
+}
+
+.weblix-wave-ticker__text {
+	display: inline-flex;
+	align-items: center;
+}
+
+.weblix-wave-ticker__char {
+	display: inline-block;
+	will-change: transform;
+}
+
+.weblix-wave-ticker__emoji::before {
+	content: attr(data-emoji);
+	font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+	font-size: 1em;
+	display: inline-block;
+}
