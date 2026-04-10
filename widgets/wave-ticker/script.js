@@ -62,7 +62,7 @@
 		wrapChars( original );
 		original.style.marginRight = gap + 'px';
 
-		let scrollX      = 0;
+		let rawScrollX   = 0; // never resets — keeps wave phase continuous across loop resets
 		let lastTime     = null;
 		let oneWidth     = 0;
 		let ready        = false;
@@ -114,20 +114,24 @@
 			const dt = ( now - lastTime ) / 1000;
 			lastTime = now;
 
-			scrollX += scrollSpeed * dt;
-			if ( scrollX >= oneWidth ) scrollX -= oneWidth;
+			rawScrollX += scrollSpeed * dt;
+			const scrollX = rawScrollX % oneWidth; // visual loop reset
 			track.style.transform = `translateX(-${ scrollX }px)`;
 
 			// Spatial wave: phase based on char's screen X position.
 			// Neighbouring letters share nearly the same phase → whole words travel as one wave.
+			// rawScrollX (never resets) used here so phase stays continuous when loop wraps.
 			const time        = now / 1000;
 			const spatialFreq = waveFrequency * 0.008; // radians per pixel
 
 			charXCache.forEach( ( { el, x } ) => {
-				const screenX = x - scrollX;
+				const screenX = x - rawScrollX; // continuous — no jump on loop reset
 				const phase   = screenX * spatialFreq - time * waveSpeed;
 				const y       = Math.sin( phase ) * waveAmplitude;
-				el.style.transform = `translateY(${ y }px)`;
+				// Rotate by wave slope: derivative of sin is cos, scaled to degrees.
+				// Factor 30 controls max tilt — higher = more aggressive lean.
+				const rot     = Math.cos( phase ) * spatialFreq * waveAmplitude * 30;
+				el.style.transform = `translateY(${ y }px) rotate(${ rot }deg)`;
 			} );
 
 			requestAnimationFrame( tick );
