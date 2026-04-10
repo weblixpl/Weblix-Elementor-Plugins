@@ -62,7 +62,7 @@
 		wrapChars( original );
 		original.style.marginRight = gap + 'px';
 
-		let rawScrollX   = 0; // never resets — keeps wave phase continuous across loop resets
+		let scrollX      = 0;
 		let lastTime     = null;
 		let oneWidth     = 0;
 		let ready        = false;
@@ -111,21 +111,23 @@
 			if ( ! charXCache ) buildCharXCache();
 
 			if ( lastTime === null ) lastTime = now;
-			const dt = ( now - lastTime ) / 1000;
+			// Cap dt at 100 ms — prevents large jumps when tab was hidden/paused.
+			const dt = Math.min( ( now - lastTime ) / 1000, 0.1 );
 			lastTime = now;
 
-			rawScrollX += scrollSpeed * dt;
-			const scrollX = rawScrollX % oneWidth; // visual loop reset
+			scrollX += scrollSpeed * dt;
+			if ( scrollX >= oneWidth ) scrollX -= oneWidth;
 			track.style.transform = `translateX(-${ scrollX }px)`;
 
-			// Spatial wave: phase based on char's screen X position.
-			// Neighbouring letters share nearly the same phase → whole words travel as one wave.
-			// rawScrollX (never resets) used here so phase stays continuous when loop wraps.
+			// Spatial wave: phase = (x − scrollX) × spatialFreq − time × waveSpeed.
+			// x − scrollX is the char's current screen offset; it stays continuous across
+			// loop resets because the incoming clone takes over at the same screen position
+			// with the same phase as the outgoing original.
 			const time        = now / 1000;
 			const spatialFreq = waveFrequency * 0.008; // radians per pixel
 
 			charXCache.forEach( ( { el, x } ) => {
-				const screenX = x - rawScrollX; // continuous — no jump on loop reset
+				const screenX = x - scrollX;
 				const phase   = screenX * spatialFreq - time * waveSpeed;
 				const y       = Math.sin( phase ) * waveAmplitude;
 				// Rotate by wave slope: derivative of sin is cos, scaled to degrees.
