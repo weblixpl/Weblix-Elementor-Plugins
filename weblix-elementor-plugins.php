@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Weblix Elementor Plugins
  * Description: Custom Elementor widgets by Weblix.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Weblix
  * Text Domain: weblix-elementor
  * Requires Plugins: elementor
@@ -14,6 +14,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WEBLIX_ELEMENTOR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WEBLIX_ELEMENTOR_URL', plugin_dir_url( __FILE__ ) );
+
+// Auto-updater: checks self-hosted GitLab for new releases (tags = versions)
+require_once WEBLIX_ELEMENTOR_PATH . 'lib/plugin-update-checker/plugin-update-checker.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\Vcs\GitLabApi;
+use YahnisElsts\PluginUpdateChecker\v5\Vcs\PluginUpdateChecker as VcsPluginChecker;
+
+$weblix_gitlab_api = new GitLabApi(
+	'https://git.hosting.gl/Adrian/weblix-elementor-plugins',
+	'glpat-CrUaHqVIC8ilrluDJhHZzW86MQp1OjMH.01.0w0591bm0',
+	'git.hosting.gl'
+);
+$weblix_updater = new VcsPluginChecker( $weblix_gitlab_api, __FILE__, 'weblix-elementor-plugins' );
+$weblix_updater->setBranch( 'main' );
 
 final class Weblix_Elementor_Plugins {
 
