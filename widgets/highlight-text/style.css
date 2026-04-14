@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Weblix Highlight Text Widget
+   ========================================================================== */
+
+.weblix-hl-heading {
+	line-height: 1.3;
+}
+
+/* --- Base mark styles --- */
+
+.weblix-hl {
+	display: inline;
+	white-space: nowrap;
+	font-style: inherit;
+}
+
+/* --- Background type (default) --- */
+
+.weblix-hl--background {
+	padding: 0.05em 0.4em;
+	border-radius: 0.4em;
+}
+
+/* --- Border type --- */
+
+.weblix-hl--border {
+	padding: 0.05em 0.4em;
+	border-radius: 0.4em;
+	background-color: transparent;
+	border: 2px solid;
+}
+
+/* --- Underline type --- */
+
+.weblix-hl--underline {
+	background: none;
+	border-radius: 0;
+	padding: 0;
+	padding-bottom: 0.05em;
+	border-bottom: var(--hl-underline-height, 4px) solid var(--hl-underline-color, #7b2fff);
+}
+
+/* --- Glow effect --- */
+
+.weblix-hl--glow {
+	box-shadow: 0 0 var(--hl-glow-size, 20px) var(--hl-glow-color, #7b2fff);
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+/* Pulse glow */
+
+@keyframes weblix-hl-pulse {
+	0%, 100% {
+		box-shadow:
+			0 0 var(--hl-glow-size, 20px) var(--hl-glow-color, #7b2fff);
+	}
+	50% {
+		box-shadow:
+			0 0 calc(var(--hl-glow-size, 20px) * 2) var(--hl-glow-color, #7b2fff),
+			0 0 calc(var(--hl-glow-size, 20px) * 3.5) var(--hl-glow-color, #7b2fff);
+	}
+}
+
+.weblix-hl--anim-pulse {
+	animation: weblix-hl-pulse var(--hl-anim-speed, 2s) ease-in-out infinite;
+}
+
+/* Shimmer */
+
+@keyframes weblix-hl-shimmer {
+	0%   { background-position: -250% center; }
+	100% { background-position: 250% center; }
+}
+
+.weblix-hl--anim-shimmer {
+	background-image: linear-gradient(
+		90deg,
+		var(--hl-bg, #7b2fff) 20%,
+		rgba(255, 255, 255, 0.45) 50%,
+		var(--hl-bg, #7b2fff) 80%
+	) !important;
+	background-size: 300% auto !important;
+	background-color: transparent !important;
+	animation: weblix-hl-shimmer var(--hl-anim-speed, 2s) linear infinite;
+}
+
+/* Bounce */
+
+@keyframes weblix-hl-bounce {
+	0%, 100% { transform: translateY(0); }
+	50%       { transform: translateY(-5px); }
+}
+
+.weblix-hl--anim-bounce {
+	display: inline-block;
+	animation: weblix-hl-bounce var(--hl-anim-speed, 2s) ease-in-out infinite;
+}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Weblix Elementor Plugins
  * Description: Custom Elementor widgets by Weblix.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: Weblix
  * Text Domain: weblix-elementor
  * Requires Plugins: elementor
@@ -67,11 +67,20 @@ final class Weblix_Elementor_Plugins {
 			filemtime( WEBLIX_ELEMENTOR_PATH . 'widgets/wave-ticker/script.js' ),
 			true
 		);
+		wp_register_style(
+			'weblix-highlight-text',
+			WEBLIX_ELEMENTOR_URL . 'widgets/highlight-text/style.css',
+			[],
+			filemtime( WEBLIX_ELEMENTOR_PATH . 'widgets/highlight-text/style.css' )
+		);
 	}
 
 	public function register_widgets( $widgets_manager ) {
 		require_once WEBLIX_ELEMENTOR_PATH . 'widgets/wave-ticker/widget.php';
 		$widgets_manager->register( new \Weblix\Widgets\Wave_Ticker() );
+
+		require_once WEBLIX_ELEMENTOR_PATH . 'widgets/highlight-text/widget.php';
+		$widgets_manager->register( new \Weblix\Widgets\Highlight_Text() );
 	}
 }
 
