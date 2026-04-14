@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Weblix Elementor Plugins
  * Description: Custom Elementor widgets by Weblix.
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Weblix
  * Text Domain: weblix-elementor
  * Requires Plugins: elementor
@@ -72,6 +72,13 @@ final class Weblix_Elementor_Plugins {
 			WEBLIX_ELEMENTOR_URL . 'widgets/highlight-text/style.css',
 			[],
 			filemtime( WEBLIX_ELEMENTOR_PATH . 'widgets/highlight-text/style.css' )
+		);
+		wp_register_script(
+			'weblix-highlight-text',
+			WEBLIX_ELEMENTOR_URL . 'widgets/highlight-text/script.js',
+			[],
+			filemtime( WEBLIX_ELEMENTOR_PATH . 'widgets/highlight-text/script.js' ),
+			true
 		);
 	}
 

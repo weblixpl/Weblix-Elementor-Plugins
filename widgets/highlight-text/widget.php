@@ -31,6 +31,10 @@ class Highlight_Text extends \Elementor\Widget_Base {
 		return [ 'weblix-highlight-text' ];
 	}
 
+	public function get_script_depends() {
+		return [ 'weblix-highlight-text' ];
+	}
+
 	protected function register_controls() {
 
 		// === TREŚĆ ===
@@ -205,6 +209,43 @@ class Highlight_Text extends \Elementor\Widget_Base {
 			'condition' => [ 'hl_type' => 'border' ],
 		] );
 
+		$this->add_control( 'hl_outline_heading', [
+			'label'     => 'Obrys (outline)',
+			'type'      => \Elementor\Controls_Manager::HEADING,
+			'separator' => 'before',
+		] );
+
+		$this->add_control( 'hl_outline_width', [
+			'label'     => 'Grubość obrysu',
+			'type'      => \Elementor\Controls_Manager::SLIDER,
+			'default'   => [ 'size' => 0 ],
+			'range'     => [ 'px' => [ 'min' => 0, 'max' => 10 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .weblix-hl' => 'outline-width: {{SIZE}}px; outline-style: solid;',
+			],
+		] );
+
+		$this->add_control( 'hl_outline_color', [
+			'label'     => 'Kolor obrysu',
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#ffffff',
+			'selectors' => [
+				'{{WRAPPER}} .weblix-hl' => 'outline-color: {{VALUE}};',
+			],
+			'condition' => [ 'hl_outline_width[size]!' => '0' ],
+		] );
+
+		$this->add_control( 'hl_outline_offset', [
+			'label'     => 'Offset obrysu',
+			'type'      => \Elementor\Controls_Manager::SLIDER,
+			'default'   => [ 'size' => 2 ],
+			'range'     => [ 'px' => [ 'min' => -10, 'max' => 20 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .weblix-hl' => 'outline-offset: {{SIZE}}px;',
+			],
+			'condition' => [ 'hl_outline_width[size]!' => '0' ],
+		] );
+
 		$this->add_control( 'hl_underline_color', [
 			'label'     => 'Kolor podkreślenia',
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -328,6 +369,7 @@ class Highlight_Text extends \Elementor\Widget_Base {
 		);
 
 		wp_enqueue_style( 'weblix-highlight-text' );
+		wp_enqueue_script( 'weblix-highlight-text' );
 
 		echo '<' . $tag . ' class="weblix-hl-heading">' . $parsed . '</' . $tag . '>';
 	}
