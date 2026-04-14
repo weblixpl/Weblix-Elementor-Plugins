@@ -306,6 +306,17 @@ class Highlight_Text extends \Elementor\Widget_Base {
 			'condition' => [ 'hl_glow' => 'yes' ],
 		] );
 
+		$this->add_control( 'hl_rotate', [
+			'label'     => 'Obrót (stopnie)',
+			'type'      => \Elementor\Controls_Manager::SLIDER,
+			'default'   => [ 'size' => 0 ],
+			'range'     => [ 'px' => [ 'min' => -20, 'max' => 20, 'step' => 0.5 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .weblix-hl' => 'transform: rotate({{SIZE}}deg); --hl-rotate: {{SIZE}}deg;',
+			],
+			'separator' => 'before',
+		] );
+
 		$this->add_control( 'hl_animation', [
 			'label'   => 'Animacja',
 			'type'    => \Elementor\Controls_Manager::SELECT,

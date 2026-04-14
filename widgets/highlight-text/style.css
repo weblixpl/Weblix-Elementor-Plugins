@@ -9,7 +9,8 @@
 /* --- Base mark styles --- */
 
 .weblix-hl {
-	display: inline;
+	display: inline-block;
+	vertical-align: middle;
 	white-space: nowrap;
 	font-style: inherit;
 	line-height: 1;
@@ -91,11 +92,10 @@
 /* Bounce */
 
 @keyframes weblix-hl-bounce {
-	0%, 100% { transform: translateY(0); }
-	50%       { transform: translateY(-5px); }
+	0%, 100% { transform: rotate(var(--hl-rotate, 0deg)) translateY(0); }
+	50%       { transform: rotate(var(--hl-rotate, 0deg)) translateY(-5px); }
 }
 
 .weblix-hl--anim-bounce {
-	display: inline-block;
 	animation: weblix-hl-bounce var(--hl-anim-speed, 2s) ease-in-out infinite;
 }
