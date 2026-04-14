@@ -99,3 +99,16 @@
 .weblix-hl--anim-bounce {
 	animation: weblix-hl-bounce var(--hl-anim-speed, 2s) ease-in-out infinite;
 }
+
+/* Wobble */
+
+@keyframes weblix-hl-wobble {
+	0%, 100% { transform: rotate(var(--hl-rotate, 0deg)); }
+	25%       { transform: rotate(calc(var(--hl-rotate, 0deg) + var(--hl-wobble-deg, 8deg))); }
+	50%       { transform: rotate(var(--hl-rotate, 0deg)); }
+	75%       { transform: rotate(calc(var(--hl-rotate, 0deg) - var(--hl-wobble-deg, 8deg))); }
+}
+
+.weblix-hl--anim-wobble {
+	animation: weblix-hl-wobble var(--hl-anim-speed, 2s) ease-in-out infinite;
+}

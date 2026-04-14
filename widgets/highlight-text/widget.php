@@ -325,8 +325,20 @@ class Highlight_Text extends \Elementor\Widget_Base {
 				'none'    => 'Brak',
 				'pulse'   => 'Pulse glow',
 				'shimmer' => 'Shimmer',
-				'bounce'  => 'Bounce',
+				'bounce'  => 'Bounce (góra/dół)',
+				'wobble'  => 'Wobble (lewo/prawo)',
 			],
+		] );
+
+		$this->add_control( 'hl_wobble_degrees', [
+			'label'     => 'Amplituda wobble (stopnie)',
+			'type'      => \Elementor\Controls_Manager::SLIDER,
+			'default'   => [ 'size' => 8 ],
+			'range'     => [ 'px' => [ 'min' => 1, 'max' => 30, 'step' => 0.5 ] ],
+			'selectors' => [
+				'{{WRAPPER}} .weblix-hl' => '--hl-wobble-deg: {{SIZE}}deg;',
+			],
+			'condition' => [ 'hl_animation' => 'wobble' ],
 		] );
 
 		$this->add_control( 'hl_animation_speed', [
