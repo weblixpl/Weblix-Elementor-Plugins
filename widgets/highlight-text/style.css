@@ -12,6 +12,7 @@
 	display: inline;
 	white-space: nowrap;
 	font-style: inherit;
+	line-height: 1;
 }
 
 /* --- Background type (default) --- */
